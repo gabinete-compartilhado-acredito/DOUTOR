@@ -1,0 +1,332 @@
+[
+ {
+  "nome": "DOU ME S1",
+  "casa": "dou",
+  "channel": "g-dou-educacao",
+  "description": "Palavras chave de educação (Seção 1)",
+  "filter_number": 32,
+  "column_name": "orgao",
+  "positive_filter": "Ministério da Educação",
+  "negative_filter": null
+ },
+ {
+  "nome": "DOU ME S1",
+  "casa": "dou",
+  "channel": "g-dou-educacao",
+  "description": "Palavras chave de educação (Seção 1)",
+  "filter_number": 32,
+  "column_name": "secao",
+  "positive_filter": "1",
+  "negative_filter": null
+ },
+ {
+  "nome": "DOU ME S1",
+  "casa": "dou",
+  "channel": "g-dou-educacao",
+  "description": "Palavras chave de educação (Seção 1)",
+  "filter_number": 32,
+  "column_name": "alltext",
+  "positive_filter": "educação; ensino médio; lei do aprendiz; ensino técnico; ensino profisionalizante; formação continuada; formação inicial; avaliação de professores; avaliação docente; BNCC; Base Nacional Comum Curricular; educação básica; sistema S; instituto federal; institutos federais; sistema nacional de educação; educação financeira; conselho nacional de educação; ministério da educação; MEC; jovens; juventude; educação técnica; Secretaria de Educação Profissional e Tecnológica; Setec; Fundeb; Fundo de Manutenção e Desenvolvimento da Educação Básica e de Valorização dos Profissionais da Educação; educação técnica; educação profissionalizante; alfabetização; PAIC; Programa de Alfabetização na Idade Certa; Pronatec; Novo ensino médio; SESI; SENAI; IEL; profissionalização; aprendizagem",
+  "negative_filter": null
+ },
+ {
+  "nome": "DOU ME exo-nom",
+  "casa": "dou",
+  "channel": "g-dou-educacao",
+  "description": "Nomeações e exonerações do Executivo",
+  "filter_number": 33,
+  "column_name": "orgao",
+  "positive_filter": "Ministério da Educação",
+  "negative_filter": "Universidade; Instituto Federal"
+ },
+ {
+  "nome": "DOU ME exo-nom",
+  "casa": "dou",
+  "channel": "g-dou-educacao",
+  "description": "Nomeações e exonerações do Executivo",
+  "filter_number": 33,
+  "column_name": "secao",
+  "positive_filter": "2",
+  "negative_filter": null
+ },
+ {
+  "nome": "DOU ME exo-nom",
+  "casa": "dou",
+  "channel": "g-dou-educacao",
+  "description": "Nomeações e exonerações do Executivo",
+  "filter_number": 33,
+  "column_name": "alltext",
+  "positive_filter": "nomear; exonerar; nomeação; exoneração; nomeia; exonera",
+  "negative_filter": null
+ },
+ {
+  "nome": "DOU presidente",
+  "casa": "dou",
+  "channel": "g-dou-presidente",
+  "description": "Decretos, MPs e outros do presidente",
+  "filter_number": 34,
+  "column_name": "assina",
+  "positive_filter": "jair messias bolsonaro; mourão",
+  "negative_filter": null
+ },
+ {
+  "nome": "DOU mulheres",
+  "casa": "dou",
+  "channel": "g-dou-mulheres",
+  "description": "Palavras chave de mulheres",
+  "filter_number": 35,
+  "column_name": "alltext",
+  "positive_filter": "direitos das mulheres; direito da mulher; direitos da mulher; estupro; violência doméstica; violência contra a mulher; comissão de defesa dos direitos das mulheres; secretaria da mulher; cota para mulheres; cotas para mulheres; cota no parlamento; licença paternal; licença paterna; licença maternidade; mulheres candidatas; candidatura laranja; candidatas laranja; candidatas laranjas; candidaturas fantasmas; candidatura fantasma; candidaturas fantasma; candidata fantasma; candidatas fantasmas; candidatas fantasma; delegacia da mulher; delegacia 24h; lei maria da penha; porte de armas; gravidez na adolescência; delegacia 24 horas; fundo partidário; fundo eleitoral",
+  "negative_filter": null
+ },
+ {
+  "nome": "DOU mulheres",
+  "casa": "dou",
+  "channel": "g-dou-mulheres",
+  "description": "Artigos sobre mulheres (Seção 1)",
+  "filter_number": 36,
+  "column_name": "alltext",
+  "positive_filter": "mulher",
+  "negative_filter": "direitos das mulheres; direito da mulher; direitos da mulher; estupro; violência doméstica; violência contra a mulher; comissão de defesa dos direitos das mulheres; secretaria da mulher; cota para mulheres; cotas para mulheres; cota no parlamento; licença paternal; licença paterna; licença maternidade; mulheres candidatas; candidatura laranja; candidatas laranja; candidatas laranjas; candidaturas fantasmas; candidatura fantasma; candidaturas fantasma; candidata fantasma; candidatas fantasmas; candidatas fantasma; delegacia da mulher; delegacia 24h; lei maria da penha; porte de armas; gravidez na adolescência; delegacia 24 horas; fundo partidário; fundo eleitoral"
+ },
+ {
+  "nome": "DOU mulheres",
+  "casa": "dou",
+  "channel": "g-dou-mulheres",
+  "description": "Artigos sobre mulheres (Seção 1)",
+  "filter_number": 36,
+  "column_name": "secao",
+  "positive_filter": "1",
+  "negative_filter": null
+ },
+ {
+  "nome": "DOU drogas",
+  "casa": "dou",
+  "channel": "g-dou-drogas",
+  "description": "Palavras chave de drogas",
+  "filter_number": 37,
+  "column_name": "alltext",
+  "positive_filter": "drogas; redução de danos; anti-drogas; dependência química; dependentes químicos; psicotrópicos; entorpecentes; anti-droga; droga; dependente químico; psicotrópico; entorpecente; substâncias químicas; narcótico; narcóticos; alucinógeno; alucinógenos; alucinógena; alucinógenas",
+  "negative_filter": "drogaria"
+ },
+ {
+  "nome": "DOU drogas",
+  "casa": "dou",
+  "channel": "g-dou-drogas",
+  "description": "Palavras chave de drogas",
+  "filter_number": 37,
+  "column_name": "orgao",
+  "positive_filter": null,
+  "negative_filter": "Coordenação de Classificação Indicativa"
+ },
+ {
+  "nome": "DOU drogas",
+  "casa": "dou",
+  "channel": "g-dou-drogas",
+  "description": "Palavras chave de drogas",
+  "filter_number": 37,
+  "column_name": "secao",
+  "positive_filter": null,
+  "negative_filter": "3"
+ },
+ {
+  "nome": "DOU economia",
+  "casa": "dou",
+  "channel": "g-dou-economia",
+  "description": "Assinados pelo ministro (Seção 1)",
+  "filter_number": 38,
+  "column_name": "orgao",
+  "positive_filter": "Ministério da Economia",
+  "negative_filter": null
+ },
+ {
+  "nome": "DOU economia",
+  "casa": "dou",
+  "channel": "g-dou-economia",
+  "description": "Assinados pelo ministro (Seção 1)",
+  "filter_number": 38,
+  "column_name": "assina",
+  "positive_filter": "Paulo Guedes",
+  "negative_filter": null
+ },
+ {
+  "nome": "DOU economia",
+  "casa": "dou",
+  "channel": "g-dou-economia",
+  "description": "Assinados pelo ministro (Seção 1)",
+  "filter_number": 38,
+  "column_name": "secao",
+  "positive_filter": "1",
+  "negative_filter": null
+ },
+ {
+  "nome": "DOU economia",
+  "casa": "dou",
+  "channel": "g-dou-economia",
+  "description": "Palavras chave de economia",
+  "filter_number": 39,
+  "column_name": "secao",
+  "positive_filter": "1",
+  "negative_filter": null
+ },
+ {
+  "nome": "DOU economia",
+  "casa": "dou",
+  "channel": "g-dou-economia",
+  "description": "Palavras chave de economia",
+  "filter_number": 39,
+  "column_name": "alltext",
+  "positive_filter": "reforma tributária; liberdade econômica; renúncia fiscal; competitividade; INSS; Instituto Nacional do Seguro Social",
+  "negative_filter": null
+ },
+ {
+  "nome": "DOU economia",
+  "casa": "dou",
+  "channel": "g-dou-economia",
+  "description": "Palavras chave de economia",
+  "filter_number": 39,
+  "column_name": "assina",
+  "positive_filter": null,
+  "negative_filter": "Paulo Guedes"
+ },
+ {
+  "nome": "DOU economia",
+  "casa": "dou",
+  "channel": "g-dou-economia",
+  "description": "Palavras chave de economia",
+  "filter_number": 39,
+  "column_name": "orgao",
+  "positive_filter": null,
+  "negative_filter": "Tribunal de Contas da União"
+ },
+ {
+  "nome": "DOU infraestrutura",
+  "casa": "dou",
+  "channel": "g-dou-infraestrutura",
+  "description": "Assinados pelo ministro (Seção 1)",
+  "filter_number": 40,
+  "column_name": "orgao",
+  "positive_filter": "Ministério da Infraestrutura; Ministério do Desenvolvimento Regional",
+  "negative_filter": null
+ },
+ {
+  "nome": "DOU infraestrutura",
+  "casa": "dou",
+  "channel": "g-dou-infraestrutura",
+  "description": "Assinados pelo ministro (Seção 1)",
+  "filter_number": 40,
+  "column_name": "secao",
+  "positive_filter": "1",
+  "negative_filter": null
+ },
+ {
+  "nome": "DOU infraestrutura",
+  "casa": "dou",
+  "channel": "g-dou-infraestrutura",
+  "description": "Assinados pelo ministro (Seção 1)",
+  "filter_number": 40,
+  "column_name": "assina",
+  "positive_filter": "TARCÍSIO GOMES DE FREITAS; RIGODANZO",
+  "negative_filter": null
+ },
+ {
+  "nome": "DOU infraestrutura",
+  "casa": "dou",
+  "channel": "g-dou-infraestrutura",
+  "description": "Palavras chave de infraestrutura",
+  "filter_number": 41,
+  "column_name": "secao",
+  "positive_filter": "1",
+  "negative_filter": null
+ },
+ {
+  "nome": "DOU infraestrutura",
+  "casa": "dou",
+  "channel": "g-dou-infraestrutura",
+  "description": "Palavras chave de infraestrutura",
+  "filter_number": 41,
+  "column_name": "alltext",
+  "positive_filter": "saneamento básico; PPP; Parceria Público-Privada; aeroportos; desenvolvimento regional; infraestrutura; rodovias; ferrovias; hidrovias",
+  "negative_filter": null
+ },
+ {
+  "nome": "DOU infraestrutura",
+  "casa": "dou",
+  "channel": "g-dou-infraestrutura",
+  "description": "Palavras chave de infraestrutura",
+  "filter_number": 41,
+  "column_name": "assina",
+  "positive_filter": null,
+  "negative_filter": "TARCÍSIO GOMES DE FREITAS"
+ },
+ {
+  "nome": "DOU infraestrutura",
+  "casa": "dou",
+  "channel": "g-dou-infraestrutura",
+  "description": "Palavras chave de infraestrutura",
+  "filter_number": 41,
+  "column_name": "orgao",
+  "positive_filter": null,
+  "negative_filter": "Ministério da Justiça e Segurança Pública; Delegacia da Receita Federal; Tribunal de Contas da União; Agência Nacional de Vigilância Sanitária"
+ },
+ {
+  "nome": "DOU eficiência pública",
+  "casa": "dou",
+  "channel": "g-dou-eficiencia",
+  "description": "Palavras chave de eficiência",
+  "filter_number": 42,
+  "column_name": "secao",
+  "positive_filter": "1",
+  "negative_filter": null
+ },
+ {
+  "nome": "DOU eficiência pública",
+  "casa": "dou",
+  "channel": "g-dou-eficiencia",
+  "description": "Palavras chave de eficiência",
+  "filter_number": 42,
+  "column_name": "alltext",
+  "positive_filter": "desburocratização; Cadastro de Pessoas Físicas; identidade única; eficiência pública; lei de acesso à informação; tecnologia da informação",
+  "negative_filter": null
+ },
+ {
+  "nome": "DOU corrupção",
+  "casa": "dou",
+  "channel": "g-dou-corrupcao",
+  "description": "Palavras chave de corrupção",
+  "filter_number": 46,
+  "column_name": "secao",
+  "positive_filter": "1",
+  "negative_filter": null
+ },
+ {
+  "nome": "DOU corrupção",
+  "casa": "dou",
+  "channel": "g-dou-corrupcao",
+  "description": "Palavras chave de corrupção",
+  "filter_number": 46,
+  "column_name": "alltext",
+  "positive_filter": "corrupção; transparência; integridade; dados abertos; acesso à informação; honestidade; controle social; accountability; controle interno; controle externo",
+  "negative_filter": "fiscalização sanitária"
+ },
+ {
+  "nome": "DOU corrupção",
+  "casa": "dou",
+  "channel": "g-dou-corrupcao",
+  "description": "Palavras chave de corrupção",
+  "filter_number": 46,
+  "column_name": "orgao",
+  "positive_filter": null,
+  "negative_filter": "Atos do poder judiciário; comércio exterior; plenário; universidade; instituto federal"
+ },
+ {
+  "nome": "DOU corrupção",
+  "casa": "dou",
+  "channel": "g-dou-corrupcao",
+  "description": "Palavras chave de corrupção",
+  "filter_number": 46,
+  "column_name": "identifica",
+  "positive_filter": null,
+  "negative_filter": "despacho; extrato"
+ }
+]
