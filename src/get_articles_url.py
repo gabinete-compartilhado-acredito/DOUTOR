@@ -82,6 +82,7 @@ def update_config(config, Narticles_in_section):
     * secao       > Current list of sections to request URLs;
     * secao_all   > All sections one may want to request (does not update);
     * timedelta   > Current implementation requires this to be 0.
+`   * last_extra  > The extra edition number of the last capture.
     """
     
     if config['timedelta'] != 0:
@@ -99,10 +100,12 @@ def update_config(config, Narticles_in_section):
     if end_date < brasilia_day():
         config2['secao'] = config['secao_all']
         config2['end_date'] = (end_date + dt.timedelta(days=1)).strftime(config['date_format'])
+        config2['last_extra'] = 0
         return config2
     
     # PRESENT DAY: find out missing sections and set config to that:
-    section_keys = list(filter(lambda k: Narticles_in_section[k] == 0, Narticles_in_section.keys()))
+    # PS: always keep Extra ('e') because it can appear at any time 
+    section_keys = list(filter(lambda k: Narticles_in_section[k] == 0 or k == 'e', Narticles_in_section.keys()))
     config2['secao'] = section_keys
 
     # If there are no missing sections, reset sections list and get next day:

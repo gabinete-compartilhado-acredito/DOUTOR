@@ -51,4 +51,7 @@ def local_scheduler(config):
     while True:
         print(time.strftime('%Y-%m-%d %H:%M:%S', time.localtime()))
         config = cd.capture_DOU_driver(config)
+        if gs.debug:
+            print("Next config:")
+            print(config)
         time.sleep(60*config['sched_interval'])

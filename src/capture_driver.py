@@ -9,6 +9,21 @@ import structure_article as sa
 import post_to_slack as ps
 
 
+
+def this_extra_edition_number(edicao):
+    """
+    Gets a string 'edicao' that states which is this DOU's edition 
+    (e.g. 132-B or 154) and returns the number (int) of extra editions up
+    to this current one. No extra editions (e.g. 154) is 0, first
+    extra edition (134-A) is 1, and so on.
+    """
+    last_char = str(edicao)[-1]
+    if last_char.isdigit():
+        return 0
+    else:
+        return ord(last_char.lower()) - 96
+    
+
 def capture_DOU_driver(event):
     """
     This is the driver that runs DOU articles' capture.
@@ -103,35 +118,48 @@ def capture_DOU_driver(event):
                 # Parse article into a flexible structure that reads every key (html tag class) in the file:
                 if gs.debug:
                     print("Parse article...")
-                article = pa.parse_dou_article(response, url_file['url'])
-
-                # Write article's file to database:
-                if config['save_articles']:
-                    if gs.debug:
-                        print("Saving article...")
-                    if gs.local:
-                        wa.write_local_article(config, article, url_file['filename'])
-                    else:
-                        wa.write_to_s3(config, article, url_file['filename'])
+                raw_article = pa.parse_dou_article(response, url_file['url'])
 
                 # Organize article by capturing selected fields:
                 if gs.debug:
                     print("Select relevant fields...")        
-                article = sa.structure_article(article)
+                article = sa.structure_article(raw_article)
 
-                # Loop over filters:
-                if gs.debug:
-                    print("Filtering article...")
-                for i in range(len(bot_infos)):
-                    # Filter article:
-                    relevant_articles[i] = relevant_articles[i] + fa.get_relevant_articles(bot_infos[i], [article])
-                    # Slack crashes if message has more than 50 blocks.
-                    # Avoid this by pre-posting long messages:
-                    if config['post_articles'] and len(relevant_articles[i]) > 20:
+                # Only process (write and publish) normal editions and extra ones that were not processed yet:
+                this_edition = this_extra_edition_number(article['edicao'])
+                if article['secao'].lower()[-5:] != 'extra' or this_edition > config['last_extra']:
+                    # Set next_config to avoid the current edition:
+                    if article['secao'].lower()[-5:] == 'extra' and this_edition > next_config['last_extra']:
+                        next_config['last_extra'] = this_edition 
+                    if next_config['end_date'] != config['end_date']:
+                        next_config['last_extra'] = 0
+                        
+                    # Write raw article's file to database:
+                    if config['save_articles']:
                         if gs.debug:
-                            print('Selected more than 20 articles.')
-                        ps.post_article(config, bot_infos[i], relevant_articles[i])
-                        relevant_articles[i] = []
+                            print("Saving article...")
+                        if gs.local:
+                            wa.write_local_article(config, raw_article, url_file['filename'])
+                        else:
+                            wa.write_to_s3(config, raw_article, url_file['filename'])
+
+                    # Loop over filters:
+                    if gs.debug:
+                        print("Filtering article...")
+                    for i in range(len(bot_infos)):
+                        # Filter article:
+                        relevant_articles[i] = relevant_articles[i] + fa.get_relevant_articles(bot_infos[i], [article])
+                        # Slack crashes if message has more than 50 blocks.
+                        # Avoid this by pre-posting long messages:
+                        if config['post_articles'] and len(relevant_articles[i]) > 20:
+                            if gs.debug:
+                                print('Selected more than 20 articles.')
+                            ps.post_article(config, bot_infos[i], relevant_articles[i])
+                            relevant_articles[i] = []
+                else:
+                    if gs.debug:
+                        print('Skipped article to avoid duplicate extra editions.')
+                    
             else:
                 # GET ran but returned BAD STATUS:
                 print('Bad status in GET ' + url_file['url'])  

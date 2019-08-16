@@ -5,6 +5,7 @@
     "timedelta": 0,
     "secao": [1,2,"e"],
     "secao_all":[1,2,"e"],
+    "last_extra": 0,
     "storage_path": "../temp/",
     "save_articles": false,
     "filter_file": "../filters/all_DOU_filters_2019-07-01.json",
