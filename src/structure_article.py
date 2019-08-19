@@ -10,6 +10,45 @@ def get_key_value(key, article_raw):
     return sel[0]['value']
 
 
+def get_excert(paragraph):
+    """
+    Gets a string "paragraph", split it by " | " (which we used to 
+    separate multiple paragraphs), and returns the combination of parts of the first 
+    and second paragraphs. If there is just one paragraph, returns a part of it.
+    """
+    paragraph_list = paragraph.split('|')
+    if len(paragraph_list) > 1:
+        return paragraph_list[0][:200] + '... | ...' + paragraph_list[1][:200] 
+    else:
+        return paragraph_list[0][:300]
+    
+
+def make_resumo(paragraph):
+    """
+    Given a string 'paragraph' with all paragraphs of the DOU's article
+    (separated by ' | '), creates a excert that acts as an abstract of 
+    the article and return it.
+    """
+    if type(paragraph) == str:
+        # Look for a marker of start of a possible resumo:
+        marker = 'resolve: | '
+        marker_start = paragraph.find(marker)
+        # If no marker, just take the first paragraphs:
+        if marker_start == -1:
+            resumo = get_excert(paragraph)
+        # If marker, get the following paragraphs:
+        else:
+            marker_end = marker_start + len(marker)
+            paragraph  = paragraph[marker_end:]
+            resumo = get_excert(paragraph)
+        # Add ... to end of resumo if not the end of a phrase:
+        if resumo[-1] != '.' and resumo[-2:] != '. ':
+            resumo = resumo + '...'
+        return resumo
+    else:
+        return None
+    
+
 def structure_article(article_raw):
     """
     Takes a list of dicts that represent a DOU article with the keywords
@@ -40,13 +79,6 @@ def structure_article(article_raw):
                                             struct['strong'], struct['italico'], struct['paragraph']])
     struct['alltext'] = ' | '.join(fields_list)
     # Another new field (a clipping):
-    if type(struct['paragraph']) == str:
-        paragraph_list = struct['paragraph'].split('|')
-        if len(paragraph_list) > 1:
-            struct['resumo'] = paragraph_list[0][:200] + '... | ...' + paragraph_list[1][:200]
-        else:
-            struct['resumo'] = paragraph_list[0][:300]
-    else:
-        struct['resumo'] = None
+    struct['resumo'] = make_resumo(struct['paragraph'])
         
     return struct
