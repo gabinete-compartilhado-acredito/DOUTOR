@@ -58,10 +58,10 @@ def structure_article(article_raw):
     """
     relevant_keys = ['secao-dou', 'orgao-dou-data', 'assina', 'identifica', 'cargo', 'secao-dou-data', 
                      'edicao-dou-data', 'dou-em', 'ementa', 'dou-strong', 'titulo', 'subtitulo', 
-                     'dou-paragraph', 'publicado-dou-data']
+                     'dou-paragraph', 'publicado-dou-data', 'assinaPr']
     new_keys      = ['secao', 'orgao', 'assina', 'identifica', 'cargo', 'pagina',
                      'edicao', 'italico', 'ementa', 'strong', 'ato_orgao', 'subtitulo', 
-                    'paragraph', 'pub_date']
+                     'paragraph', 'pub_date', 'assinaPr']
     
     relevant_values = [get_key_value(key, article_raw) for key in relevant_keys]
     struct = dict(zip(new_keys, relevant_values))
@@ -72,7 +72,8 @@ def structure_article(article_raw):
     struct['url_certificado'] = article_raw[0]['url_certificado']
     
     # Format selected fields:
-    struct['secao'] = struct['secao'].split('|')[0].split(':')[1].strip()
+    struct['secao']  = struct['secao'].split('|')[0].split(':')[1].strip()
+    struct['assina'] = struct['assina'] if struct['assinaPr'] == None else struct['assinaPr'] + ' | ' + struct['assina'] 
     
     # Create new field (all the text):
     fields_list = filter(lambda s: s!=None, [struct['ato_orgao'], struct['subtitulo'], struct['ementa'], 
