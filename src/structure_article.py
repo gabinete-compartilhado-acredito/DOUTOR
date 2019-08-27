@@ -73,7 +73,11 @@ def structure_article(article_raw):
     
     # Format selected fields:
     struct['secao']  = struct['secao'].split('|')[0].split(':')[1].strip()
-    struct['assina'] = struct['assina'] if struct['assinaPr'] == None else struct['assinaPr'] + ' | ' + struct['assina'] 
+    if struct['assinaPr'] != None:   # Existe assinatura do presidente.
+        if struct['assina'] != None: # Existe as duas assinaturas.
+            struct['assina'] = struct['assinaPr'] + ' | ' + struct['assina']
+        else:                        # Só existe a assinatura do presidente.
+            struct['assina'] = struct['assinaPr']
     
     # Create new field (all the text):
     fields_list = filter(lambda s: s!=None, [struct['ato_orgao'], struct['subtitulo'], struct['ementa'], 

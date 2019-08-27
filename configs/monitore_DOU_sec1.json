@@ -1,0 +1,14 @@
+{
+    "sched_interval": 60,
+    "date_format": "%Y-%m-%d",
+    "end_date": "now",
+    "timedelta": 0,
+    "secao": [1],
+    "secao_all":[1,2,"e"],
+    "last_extra": 0,
+    "storage_path": "../temp/",
+    "save_articles": false,
+    "filter_file": "../filters/all_DOU_filters_2019-07-01.json",
+    "post_articles": true,
+    "slack_token": "../keys-configs/slack_token.pass"
+}
