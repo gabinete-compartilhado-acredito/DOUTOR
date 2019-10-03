@@ -55,10 +55,13 @@ fieldSys = """
 """
 
 
-def post_to_slack(payload, slack_token):
+def post_to_slack(payload, slack_tokens):
     """
     Get the 'payload' (a dict that contains the information for the post
     in Slack) and and send it to Slack. 
+    
+    'slack_tokens' can be one filename containing a Slack token or a list 
+    of multiple such filenames.
     """
     
     # Create a series of slack posts (one for each new tramitação, separated 
@@ -76,22 +79,29 @@ def post_to_slack(payload, slack_token):
         
     payload.update({'fields': fields})
     
-    # Username and password for Slack:
-    with open(slack_token, 'r') as token_file:
-        slack_token = token_file.read()
-    sc = SlackClient(slack_token)
-    
-    res = sc.api_call(
-      "chat.postMessage",
-      channel=payload['media']['channel'],
-      blocks=blocks % payload
-    )
-    
-    if not res['ok']:
-        print('Call to Slack post message failed!')
-        print(res)
-        print(payload)
+    # Standardize slack_tokens as a list of slack token files:
+    if type(slack_tokens) != list:
+        slack_tokens = [slack_tokens]
 
+    # LOOP over Slack tokens (post the same messages to multiple workspaces):
+    for slack_token in slack_tokens:
+
+        # Username and password for Slack: 
+        with open(slack_token, 'r') as token_file:
+            slack_token = token_file.read()
+        sc = SlackClient(slack_token)
+
+        res = sc.api_call(
+          "chat.postMessage",
+          channel=payload['media']['channel'],
+          blocks=blocks % payload
+        )
+
+        if not res['ok']:
+            print('Call to Slack post message failed!')
+            print(res)
+            print(payload)
+            
 
 def translate_to_slack(datum, casa):
     """
