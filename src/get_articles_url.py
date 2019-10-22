@@ -38,7 +38,7 @@ def get_artigos_do(data, secao):
     
     # Example of URL: 'http://www.in.gov.br/leiturajornal?data=13-05-2019&secao=do1'
     url = url_prefix + data_string + url_sec_sel + str(secao)
-
+    
     # Specifies number of retries for GET:
     session = requests.Session()
     session.mount('http://www.in.gov.br', requests.adapters.HTTPAdapter(max_retries=3))

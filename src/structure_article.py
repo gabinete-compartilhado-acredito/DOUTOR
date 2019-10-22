@@ -58,10 +58,10 @@ def structure_article(article_raw):
     """
     relevant_keys = ['secao-dou', 'orgao-dou-data', 'assina', 'identifica', 'cargo', 'secao-dou-data', 
                      'edicao-dou-data', 'dou-em', 'ementa', 'dou-strong', 'titulo', 'subtitulo', 
-                     'dou-paragraph', 'publicado-dou-data', 'assinaPr']
+                     'dou-paragraph', 'publicado-dou-data', 'assinaPr', 'fulltext']
     new_keys      = ['secao', 'orgao', 'assina', 'identifica', 'cargo', 'pagina',
                      'edicao', 'italico', 'ementa', 'strong', 'ato_orgao', 'subtitulo', 
-                     'paragraph', 'pub_date', 'assinaPr']
+                     'paragraph', 'pub_date', 'assinaPr', 'fulltext']
     
     relevant_values = [get_key_value(key, article_raw) for key in relevant_keys]
     struct = dict(zip(new_keys, relevant_values))
