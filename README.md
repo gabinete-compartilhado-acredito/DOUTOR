@@ -81,8 +81,13 @@ Os campos semânticos disponíveis para busca são similares aos utilizados no H
 * `edicao`, a edição do DOU;
 * `ementa`, a ementa do artigo;
 * `pub_date`, a data de publicação do artigo;
+* `fulltext`, todo o texto do artigo, sem diferenção entre campos semânticos;
 * e `alltext`, um campo criado pelo *DOUTOR* que combina os demais existentes no HTML de artigos do DOU:
 `italico`,  `strong`, `ato_orgao`, `subtitulo` e `paragraph`. Esses campos também estão disponíveis para busca.
+
+**PS:** As diferenças entre `fulltext` e `alltext` é que o primeiro mantém a ordem original do texto, remove quebras de linha,
+e não diferencia múltiplas entradas do mesmo campo semântico. Já o segundo agrupa os vários campos semânticos combinados e os
+coloca na ordem descrita acima, sendo que cada ocorrência é sepadada por um *pipe* (`|`).
 
 Por fim, os objetos que compõem um mesmo filtro são combinados com a operação lógica E (AND). O *DOUTOR* vem acompanhado
 por alguns filtros em formato JSON como exemplos.

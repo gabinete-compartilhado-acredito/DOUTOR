@@ -136,6 +136,8 @@ def get_data(article):
     """
     Get relevant data from html. It recursevely gets leaf text from html
     and saves theirs classes as keys. 
+    It also creates an item in dict's key 'full-text' with all text 
+    in the html, without tags.
     
     input: 
         article: lxml.html.HtmlElement
@@ -150,6 +152,11 @@ def get_data(article):
 
     # encoding para utf-8
     data = decode(data)
+    
+    # Include full-text:
+    full_text = html.tostring(article, method='text', encoding='iso-8859-1').decode('utf-8')
+    full_text = ' '.join(full_text.split())
+    data['fulltext'] = full_text
     
     return data
 
