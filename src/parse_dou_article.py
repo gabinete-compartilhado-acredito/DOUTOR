@@ -154,8 +154,11 @@ def get_data(article):
     data = decode(data)
     
     # Include full-text:
-    full_text = html.tostring(article, method='text', encoding='iso-8859-1').decode('utf-8')
-    full_text = ' '.join(full_text.split())
+    try:
+        full_text = html.tostring(article, method='text', encoding='iso-8859-1').decode('utf-8')
+        full_text = ' '.join(full_text.split())
+    except UnicodeDecodeError:
+        full_text = None
     data['fulltext'] = full_text
     
     return data
