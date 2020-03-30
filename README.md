@@ -12,26 +12,38 @@ pode depender da manutenção do código que não estará, necessariamente, atua
 ## 1. Estrutura do projeto
 
     .
-    ├── LICENSE       <- Licença de uso, cópia e modificações
-    ├── README.md     <- Este documento
-    ├── configs       <- Arquivos de configuração que controlam as tarefas do *DOUTOR*
-    ├── exe           <- Links para scripts executáveis diretamente do terminal
-    ├── filters       <- Arquivos JSON com filtros aplicados aos artidos do DOU
-    ├── keys-configs  <- Pasta de senhas e tokens de acesso
-    ├── src           <- Códigos fonte (scripts de python 3.6)
-    └── temp          <- Pasta para arquivos baixados e registros (logs)
+    ├── LICENSE           <- Licença de uso, cópia e modificações
+    ├── README.md         <- Este documento
+    ├── requirements.txt  <- Pacotes python necessários, junto com suas versões
+    ├── configs           <- Arquivos de configuração que controlam as tarefas do *DOUTOR*
+    ├── exe               <- Links para scripts executáveis diretamente do terminal
+    ├── filters           <- Arquivos JSON com filtros aplicados aos artidos do DOU
+    ├── keys-configs      <- Pasta de senhas e tokens de acesso
+    ├── src               <- Códigos fonte (scripts de python 3.6)
+    └── temp              <- Pasta para arquivos baixados e registros (logs)
 
 ## 2. Instalação
 
 ### 2.1 Código python
 
 O *DOUTOR* não precisa ser instalado; entretanto ele precisa que você tenha python 3 instalado, junto com os seguintes pacotes:
-`sys`, `requests`, `json`, `collections`, `lxml`, `datetime`, `time`, `re`, `slackclient` e `os`.
+`sys`, `requests`, `json`, `collections`, `lxml`, `datetime`, `time`, `re`, `slackclient` *(versão < 2)* e `os`.
 No [Anaconda](https://www.anaconda.com), esses pacotes podem ser instalados com a linha de comando:
 
     conda install -c conda-forge <pacote>
 
 onde `<pacote>` é substituído pelo pacote em questão (parte deles já vem no Anaconda).
+
+Também é possível instalar as dependências do código com o comando:
+
+    pip install -r requirements.txt
+
+**PS:** É importante que a versão do pacote `slackclient` seja anterior à 2, pois as mudanças feitas na versão 2
+inviabilizam a execução do *DOUTOR*. Uma versão adequada do pacote é listada em `requirements.txt` e pode ser instalada
+com o comando acima ou via Anaconda:
+
+    conda install -c conda-forge slackclient=1.3.1
+
 
 ### 2.2 Configurando seu Slack
 
