@@ -137,7 +137,15 @@ de artigos já publicados);
 * `post_articles`: uma variável boolenada que especifica se o *DOUTOR* deve publicar os artigos selecionados ou não;
 * `slack_token`: uma string que determina o arquivo com o token do Slack, que permite seu acesso ao *DOUTOR*.
 
-## 6. Finalmentes
+## 6. Scripts auxiliares
+
+### 6.1 `list_articles.py`
+
+Este script pode ser executado no terminal e recebe dois parâmetros: a data no formato `%Y-%m-%d` (e.g. `2020-03-30`) e
+as seções do DOU sem espaçamentos (e.g. 1 ou 13 ou 123e). Ela retorna as URLs dos artigos desse dia e dessas seções.
+Mais informações na docstring.
+
+## 7. Finalmentes
 
 ### Autores
 
