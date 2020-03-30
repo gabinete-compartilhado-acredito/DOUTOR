@@ -139,10 +139,10 @@ de artigos já publicados);
 
 ## 6. Scripts auxiliares
 
-### 6.1 `list_articles.py`
+### 6.1 `list_articles`
 
 Este script pode ser executado no terminal e recebe dois parâmetros: a data no formato `%Y-%m-%d` (e.g. `2020-03-30`) e
-as seções do DOU sem espaçamentos (e.g. 1 ou 13 ou 123e). Ela retorna as URLs dos artigos desse dia e dessas seções.
+as seções do DOU sem espaçamentos (e.g. `1` ou `13` ou `123e`). Ela retorna as URLs dos artigos desse dia e dessas seções.
 Mais informações na docstring.
 
 ## 7. Finalmentes
