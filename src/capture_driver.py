@@ -101,7 +101,7 @@ def capture_DOU_driver(event):
             print("Get article...", counter)
         try:
             get_ok   = False
-            response = session.get(url_file['url'], timeout=5)
+            response = session.get(url_file['url'], timeout=15)
             get_ok   = True      
         # Warn if GET crashes:
         except requests.exceptions.ReadTimeout:
@@ -141,8 +141,10 @@ def capture_DOU_driver(event):
                         if gs.local:
                             wa.write_local_article(config, raw_article, url_file['filename'])
                         else:
-                            wa.write_to_s3(config, raw_article, url_file['filename'])
-
+                            write_return = wa.write_to_s3(config, raw_article, url_file['filename'])
+                            if write_return != None:
+                                wa.copy_s3_to_storage_gcp(config['bucket'], config['key'] + url_file['filename'])
+                            
                     # Loop over filters:
                     if gs.debug:
                         print("Filtering article...")

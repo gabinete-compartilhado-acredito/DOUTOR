@@ -3,6 +3,7 @@ keys-configs
 README.html
 prototype/
 trash/
+temp/
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 import requests
 from lxml import html
 import json
@@ -82,7 +84,7 @@ def update_config(config, Narticles_in_section):
     * secao       > Current list of sections to request URLs;
     * secao_all   > All sections one may want to request (does not update);
     * timedelta   > Current implementation requires this to be 0.
-`   * last_extra  > The extra edition number of the last capture.
+    * last_extra  > The extra edition number of the last capture.
     """
     
     if config['timedelta'] != 0:
@@ -91,10 +93,19 @@ def update_config(config, Narticles_in_section):
     # Copy config:
     config2  = dict(config)
     end_date = dt.datetime.strptime(config['end_date'], config['date_format'])
-    
+            
     # If end_date is in the future, keep the same config:
     if end_date > brasilia_day():
         return config2
+
+    if gs.local == False:
+        # If article batch does not finish all articles, only update for the next batch:
+        if config['1st_article'] + config['article_batch_size'] < sum(Narticles_in_section.values()):
+            config2['1st_article'] = config['1st_article'] + config['article_batch_size']
+            return config2
+        # If batch finishes all articles, restart article list from the beginning:
+        else:
+            config2['1st_article'] = 0
     
     # If end_date is in the past, return next day and all sections:
     if end_date < brasilia_day():
@@ -186,6 +197,15 @@ def get_articles_url(config):
                 url      = url_prefix + j['urlTitle']
                 filename = date.strftime('%Y-%m-%d') + '_s' + str(s) + '_' + fix_filename(j['urlTitle']) + '.json'
                 url_file_list.append({'url':url, 'filename':filename})
+    
+    if gs.local == False:
+        # Chop article list to fit into AWS time limit:
+        first_article = config['1st_article']
+        batch_size    = config['article_batch_size']
+        url_file_list = url_file_list[first_article:first_article + batch_size]
+    
+    if gs.debug:
+        print('Narticles_in_section:', Narticles_in_section)
     
     return url_file_list, update_config(config, Narticles_in_section)
 

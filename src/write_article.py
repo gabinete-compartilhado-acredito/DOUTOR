@@ -5,6 +5,7 @@ import global_settings as gs
 
 if not gs.local:
     import boto3
+    from botocore.exceptions import EndpointConnectionError
 
 
 def last_slash(path):
@@ -44,6 +45,7 @@ def write_local_article(config, article_raw, filename):
     Writes the article as json to a file in a sub-directory given by the publication date, 
     inside the directory given by storage_path in config.
     """
+    
     if len(article_raw) == 0:
         print('len(article_raw)=0: do not write locally.')
         return None
@@ -73,6 +75,7 @@ def write_to_s3(config, article_raw, filename):
     It prepares a json ('body') and save it to AWS S3. It returns the S3 
     HTTP status code.
     """
+    
     if len(article_raw) == 0:
         print('len(article_raw)=0: do not save to S3.')
         return None
@@ -93,3 +96,30 @@ def write_to_s3(config, article_raw, filename):
                   Key=config['key']+filename)
     
     return s3_log['ResponseMetadata']['HTTPStatusCode']
+
+
+def copy_s3_to_storage_gcp(bucket, key):
+    """
+    Inputs:
+    - 'bucket': the bucket in which the file is stored in AWS and GCP;
+    - 'key': the "file path" of the file.
+    
+    This function calls the lambda function that copies the file from AWS
+    to GCP storage.
+    """
+    
+    params = {'bucket': bucket, 'key': key}
+    
+    lambd = boto3.client('lambda')
+    
+    if gs.debug:
+        print('Invoking write-to-storage-gcp...')
+    # Order lambda to save this result to storage (Google):
+    try:
+        lambd.invoke(
+            FunctionName='arn:aws:lambda:us-east-1:085250262607:function:write-to-storage-gcp:JustLambda',
+            InvocationType='Event',
+            Payload=json.dumps(params))
+    except(EndpointConnectionError):
+        print('Failed to call write-to-storage-gcp')
+    

@@ -1,14 +1,16 @@
 {
     "sched_interval": 1,
     "date_format": "%Y-%m-%d",
-    "end_date": "2019-08-15",
+    "end_date": "now",
     "timedelta": 0,
-    "secao": [1,2,"e"],
-    "secao_all":[1,2,"e"],
+    "secao": [1,2,3,"e"],
+    "secao_all":[1,2,3,"e"],
     "last_extra": 0,
     "storage_path": "../temp/",
     "save_articles": false,
     "filter_file": "../filters/sistemas_DOU_filters.json",
-    "post_articles": true,
-    "slack_token": "../keys-configs/slack_token.pass"
+    "post_articles": false,
+    "slack_token": "../keys-configs/slack_token.pass",
+    "bucket": "brutos-publicos",
+    "key": "executivo/federal/dou/"
 }

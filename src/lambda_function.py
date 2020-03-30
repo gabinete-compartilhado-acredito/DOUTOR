@@ -26,6 +26,15 @@ def lambda_handler(event, context):
     # Save config to AWS DynamoDB:
     response = client.put_item(TableName="configs", Item=dyjson.dumps(updated_config, as_dict=True))
 
+    # Immediately call this function again if capturing next article batch in AWS:
+    if gs.local == False and updated_config['1st_article'] != 0:
+        time.sleep(5)
+        print('Calling next batch from article #', updated_config['1st_article'])
+        lambd = boto3.client('lambda')
+        lambd.invoke(
+             FunctionName='arn:aws:lambda:us-east-1:085250262607:function:capture_dou:PROD',
+             #FunctionName='arn:aws:lambda:us-east-1:085250262607:function:capture_dou:DEV',
+             InvocationType='Event')
 
 def local_scheduler(config):
     """
