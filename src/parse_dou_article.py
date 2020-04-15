@@ -13,7 +13,7 @@ def select_article(response):
         response: requests.models.Response
     return: lxml.html.HtmlElement
     """
-    tree  = html.fromstring(response.content)
+    tree  = html.fromstring(response.text) # Changed from .content to .text to avoid decoding errors later on (2020-04-15)
     xpath = '//*[@id="materia"]'
     return tree.xpath(xpath)[0]
 
@@ -76,7 +76,7 @@ def recurse_over_nodes(tree, parent_key, data):
 
 def decode(data, encoding= 'iso-8859-1', decoding='utf8'):
     """
-    Change enconding from string with secure error handling
+    Change encoding from string with secure error handling
     
     input:
         data: dict
@@ -132,6 +132,31 @@ def filter_values(data):
     return final
 
 
+def decoded_full_text(article):
+    """
+    Get articles' full text (without identifying html tags).
+    """
+    try:
+        full_text = html.tostring(article, method='html', encoding='utf-8').decode('utf-8')
+        full_text = re.sub('<.+?>', ' ', full_text)
+        full_text = ' '.join(full_text.split())
+        full_text = re.sub('<.+?>', ' ', full_text)
+    except UnicodeEncodeError:
+        full_text = html.tostring(article, method='html', encoding='iso-8859-1').decode('utf-8')
+        full_text = re.sub('<.+?>', ' ', full_text)
+        full_text = ' '.join(full_text.split())
+        full_text = re.sub('<.+?>', ' ', full_text)
+    except UnicodeDecodeError:
+        full_text = html.tostring(article, method='html', encoding='utf-8').decode('utf-8')
+        full_text = re.sub('<.+?>', ' ', full_text)
+        full_text = ' '.join(full_text.split())
+        full_text = re.sub('<.+?>', ' ', full_text)
+    except:
+        full_text = None
+        
+    return full_text
+
+
 def get_data(article):
     """
     Get relevant data from html. It recursevely gets leaf text from html
@@ -151,18 +176,10 @@ def get_data(article):
     data = {k: v for k,v in data.items() if len(k) != 0}
 
     # encoding para utf-8
-    data = decode(data)
+    #data = decode(data)
     
     # Include full-text:
-    try:
-        full_text = html.tostring(article, method='text', encoding='iso-8859-1').decode('utf-8')
-        full_text = ' '.join(full_text.split())
-    except UnicodeEncodeError:
-        full_text = html.tostring(article, method='text', encoding='utf-8').decode('utf-8')
-        full_text = ' '.join(full_text.split())
-    except UnicodeDecodeError:
-        full_text = None
-    data['fulltext'] = full_text
+    data['fulltext'] = decoded_full_text(article)
     
     return data
 
