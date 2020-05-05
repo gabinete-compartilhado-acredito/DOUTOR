@@ -1,16 +1,16 @@
 {
     "sched_interval": 30,
     "date_format": "%Y-%m-%d",
-    "end_date": "now",
+    "end_date": "2020-05-04",
     "timedelta": 0,
     "secao": [1,2,"e"],
-    "secao_all":[1,2,3,"e"],
-    "last_extra": 0,
     "storage_path": "../temp/",
     "save_articles": false,
     "filter_file": "../filters/all_DOU_filters_2020-04-27.json",
     "post_articles": true,
     "slack_token": "../keys-configs/slack_token.pass",
     "bucket": "brutos-publicos",
-    "key": "executivo/federal/dou/"
+    "key": "executivo/federal/dou/",
+    "url_list": "../temp/url_list.txt",
+    "daily_clean_url_list": true
 }

@@ -125,43 +125,34 @@ def capture_DOU_driver(event):
                     print("Select relevant fields...")        
                 article = sa.structure_article(raw_article)
 
-                # Only process (write and publish) normal editions and extra ones that were not processed yet:
-                this_edition = this_extra_edition_number(article['edicao'])
-                if article['secao'].lower()[-5:] != 'extra' or this_edition > config['last_extra']:
-                    # Set next_config to avoid the current edition:
-                    if article['secao'].lower()[-5:] == 'extra' and this_edition > next_config['last_extra']:
-                        next_config['last_extra'] = this_edition 
-                    if next_config['end_date'] != config['end_date']:
-                        next_config['last_extra'] = 0
-                        
-                    # Write raw article's file to database:
-                    if config['save_articles']:
-                        if gs.debug:
-                            print("Saving article...")
-                        if gs.local:
-                            wa.write_local_article(config, raw_article, url_file['filename'])
-                        else:
-                            write_return = wa.write_to_s3(config, raw_article, url_file['filename'])
-                            if write_return != None:
-                                wa.copy_s3_to_storage_gcp(config['bucket'], config['key'] + url_file['filename'])
+                # Write raw article's file to database:
+                if config['save_articles']:
+                    if gs.debug:
+                        print("Saving article...")
+                    if gs.local:
+                        wa.write_local_article(config, raw_article, url_file['filename'])
+                    else:
+                        write_return = wa.write_to_s3(config, raw_article, url_file['filename'])
+                        if write_return == 200:
+                            gcp_copy_return = wa.copy_s3_to_storage_gcp(config['bucket'], config['key'] + url_file['filename'])
                             
-                    # Loop over filters:
-                    if gs.debug:
-                        print("Filtering article...")
-                    for i in range(len(bot_infos)):
-                        # Filter article:
-                        relevant_articles[i] = relevant_articles[i] + fa.get_relevant_articles(bot_infos[i], [article])
-                        # Slack crashes if message has more than 50 blocks.
-                        # Avoid this by pre-posting long messages:
-                        if config['post_articles'] and len(relevant_articles[i]) > 20:
-                            if gs.debug:
-                                print('Selected more than 20 articles.')
-                            ps.post_article(config, bot_infos[i], relevant_articles[i])
-                            relevant_articles[i] = []
-                else:
-                    if gs.debug:
-                        print('Skipped article to avoid duplicate extra editions.')
-                    
+                # Loop over filters:
+                if gs.debug:
+                    print("Filtering article...")
+                for i in range(len(bot_infos)):
+                    # Filter article:
+                    relevant_articles[i] = relevant_articles[i] + fa.get_relevant_articles(bot_infos[i], [article])
+                    # Slack crashes if message has more than 50 blocks.
+                    # Avoid this by pre-posting long messages:
+                    if config['post_articles'] and len(relevant_articles[i]) > 20:
+                        if gs.debug:
+                            print('Selected more than 20 articles.')
+                        ps.post_article(config, bot_infos[i], relevant_articles[i])
+                        relevant_articles[i] = []
+
+                # Record URL in list of captured articles:
+                gu.register_captured_url(config['url_list'], url_file['url'])
+                        
             else:
                 # GET ran but returned BAD STATUS:
                 print('Bad status in GET ' + url_file['url'])  

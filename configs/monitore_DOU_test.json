@@ -4,13 +4,13 @@
     "end_date": "now",
     "timedelta": 0,
     "secao": [1,2,3,"e"],
-    "secao_all":[1,2,3,"e"],
-    "last_extra": 0,
     "storage_path": "../temp/",
     "save_articles": false,
     "filter_file": "../filters/sistemas_DOU_filters.json",
     "post_articles": false,
     "slack_token": "../keys-configs/slack_token.pass",
     "bucket": "brutos-publicos",
-    "key": "executivo/federal/dou/"
+    "key": "executivo/federal/dou/",
+    "url_list": "../temp/url_list.txt",
+    "daily_clean_url_list": true
 }

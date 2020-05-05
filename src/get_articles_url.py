@@ -5,6 +5,7 @@ from lxml import html
 import json
 import datetime as dt
 import global_settings as gs
+import os
 
 if not gs.local:
     import boto3                                  
@@ -71,6 +72,142 @@ def brasilia_day():
     return (dt.datetime.utcnow() + dt.timedelta(hours=-3)).replace(hour=0, minute=0, second=0, microsecond=0)
 
 
+def load_captured_urls_aws(table_name):
+    """
+    Load items from the AWS dynamoDB table `table_name` as entries in a list
+    and return list.
+    """
+    # Pega a referência (pointer) da tabela do dynamo:    
+    dynamodb = boto3.resource('dynamodb')
+    table    = dynamodb.Table(table_name)
+
+    # Get all items (following pagination if necessary):
+    response = table.scan()
+    data = response['Items']
+    while 'LastEvaluatedKey' in response:
+        response = table.scan(ExclusiveStartKey=response['LastEvaluatedKey'])
+        data.extend(response['Items'])
+    
+    # Format data as a list of URLs:
+    url_list = [d['url'] for d in data]
+    
+    return url_list
+
+
+def load_captured_urls_local(filename):
+    """
+    Load lines in the file `filename` as entries in a list
+    and return list. Return empty list if file is not found.
+    """
+    if os.path.isfile(filename) == False:
+        return []
+    
+    with open(filename, 'r') as f:
+        return f.read().splitlines()
+
+
+def load_captured_urls(url_list):
+    """
+    Load list of urls from local or remote (AWS) source, according to 
+    global variable gs.local. `url_list` is string that is either 
+    a file path or a DynamoDB table name.
+    """
+    if gs.local:
+        result = load_captured_urls_local(url_list)
+    else:
+        result = load_captured_urls_aws(url_list)
+    return result
+
+
+def register_captured_url_aws(table_name, url):
+    """
+    Put the `url` (str) as a new item in AWS DynamoDB table 
+    `table_name` (str).
+    """
+    # Pega a referência (pointer) da tabela do dynamo:    
+    dynamodb = boto3.resource('dynamodb')
+    table    = dynamodb.Table(table_name)
+
+    # Escreve os dicionários criados pela função generate_body na tabela do dynamo: 
+    with table.batch_writer() as batch:
+        batch.put_item(Item={'url': url})
+        
+
+def register_captured_url_local(filename, url):
+    """
+    Append `url` (str) as a new line to the file `filename`.
+    """
+    with open(filename, 'a') as f:
+        f.write(url + '\n')
+
+
+def register_captured_url(url_list, url):
+    """
+    Append `url` (str) to `url_list`, which is either 
+    a local file or an AWS DynamoDB table (according to 
+    global variable gs.local).
+    """    
+    if gs.local:
+        register_captured_url_local(url_list, url)
+    else:
+        register_captured_url_aws(url_list, url)
+    
+        
+def erase_captured_urls_aws(table_name):
+    """
+    Erase all items found in DynamoDB table with name 
+    `table_name`.
+    """
+    # Pega a referência (pointer) da tabela do dynamo:    
+    dynamodb = boto3.resource('dynamodb')
+    table    = dynamodb.Table(table_name)
+
+    # Get all items (following pagination if necessary):
+    response = table.scan()
+    data = response['Items']
+    while 'LastEvaluatedKey' in response:
+        response = table.scan(ExclusiveStartKey=response['LastEvaluatedKey'])
+        data.extend(response['Items'])
+
+    # Delete all items:
+    with table.batch_writer() as batch:
+        for each in data:
+            batch.delete_item(Key=each)
+
+
+def erase_captured_urls_local(filename):
+    """
+    Erase the contant of `filename`.
+    """
+    with open(filename, 'w') as f:
+        f.write('')
+
+        
+def erase_captured_urls(url_list):
+    """
+    Erase list of URLs stored in `url_list`, which 
+    might be a local filename or a DynamoDB table name
+    (according to global variable gs.local).
+    """
+    if gs.local:
+        erase_captured_urls_local(url_list)
+    else:
+        erase_captured_urls_aws(url_list)
+
+        
+def filter_captured_urls(urls_files, url_list_file):
+    """
+    Given a list of dicts `urls_files` containing URLs and filenames 
+    and a list of URLs stored in the file `url_list_file`, 
+    return a list of the dicts whose URLs are not listed in the file.
+    """
+    captured_urls = load_captured_urls(url_list_file)
+    
+    to_capture = list(filter(lambda d: d['url'] not in captured_urls, urls_files))
+    
+    return to_capture
+
+
 def update_config(config, Narticles_in_section):
     """
     Given a config file for capturing DOU articles' URLs and a dict 
@@ -93,37 +230,14 @@ def update_config(config, Narticles_in_section):
     # Copy config:
     config2  = dict(config)
     end_date = dt.datetime.strptime(config['end_date'], config['date_format'])
-            
-    # If end_date is in the future, keep the same config:
-    if end_date > brasilia_day():
-        return config2
-
-    if gs.local == False:
-        # If article batch does not finish all articles, only update for the next batch:
-        if config['1st_article'] + config['article_batch_size'] < sum(Narticles_in_section.values()):
-            config2['1st_article'] = config['1st_article'] + config['article_batch_size']
-            return config2
-        # If batch finishes all articles, restart article list from the beginning:
-        else:
-            config2['1st_article'] = 0
-    
-    # If end_date is in the past, return next day and all sections:
+                
+    # If end_date is in the past, return next day and clean captured URLs list (if requested):
     if end_date < brasilia_day():
-        config2['secao'] = config['secao_all']
+        if config['daily_clean_url_list'] == True:
+            erase_captured_urls(config['url_list'])
         config2['end_date'] = (end_date + dt.timedelta(days=1)).strftime(config['date_format'])
-        config2['last_extra'] = 0
         return config2
-    
-    # PRESENT DAY: find out missing sections and set config to that:
-    # PS: always keep Extra ('e') because it can appear at any time 
-    section_keys = list(filter(lambda k: Narticles_in_section[k] == 0 or k == 'e', Narticles_in_section.keys()))
-    config2['secao'] = section_keys
-
-    # If there are no missing sections, reset sections list and get next day:
-    if len(section_keys)==0:
-        config2['end_date'] = (end_date + dt.timedelta(days=1)).strftime(config['date_format'])
-        config2['secao'] = config['secao_all']
-        
+            
     return config2
 
 
@@ -135,7 +249,7 @@ def get_articles_url(config):
     * 'end_date':    last date to search for URLs (one can set to 'now' to get the current day); 
     * 'secao':       list of DOU sections to scan (1, 2, 3, e and/or 1a, or set to 'all' for '[1,2,3,e]';
     * 'timedelta':   number of days from end_date to start URL search (is a negative number);
-    
+
     and creates a list of DOU articles' URLs to download. 
     """
     
@@ -197,16 +311,18 @@ def get_articles_url(config):
                 url      = url_prefix + j['urlTitle']
                 filename = date.strftime('%Y-%m-%d') + '_s' + str(s) + '_' + fix_filename(j['urlTitle']) + '.json'
                 url_file_list.append({'url':url, 'filename':filename})
-    
+
+    # Filter out already captured articles:
+    url_file_list = filter_captured_urls(url_file_list, config['url_list'])
+                
     if gs.local == False:
         # Chop article list to fit into AWS time limit:
-        first_article = config['1st_article']
         batch_size    = config['article_batch_size']
-        url_file_list = url_file_list[first_article:first_article + batch_size]
+        url_file_list = url_file_list[:batch_size]
     
-    if gs.debug:
-        print('Narticles_in_section:', Narticles_in_section)
-    
+    #if gs.debug:
+    #    print('Narticles_in_section (total):', Narticles_in_section)    
+        
     return url_file_list, update_config(config, Narticles_in_section)
 
 

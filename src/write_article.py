@@ -122,4 +122,6 @@ def copy_s3_to_storage_gcp(bucket, key):
             Payload=json.dumps(params))
     except(EndpointConnectionError):
         print('Failed to call write-to-storage-gcp')
-    
+        return 2
+
+    return 200
