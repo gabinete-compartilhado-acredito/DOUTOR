@@ -22,7 +22,33 @@ def this_extra_edition_number(edicao):
         return 0
     else:
         return ord(last_char.lower()) - 96
+
     
+def captured_article_ok(save_option, saved, post_option, posted):
+    """
+    Given four boolean variables, return whether or not the article 
+    should be considered captured or not.
+    
+    save_option: Was the code required to save the article?
+    saved:       Did the code save the article?
+    post_option: Was the code required to post the article?
+    posted:      Did the code post the article?
+    """
+    # Nothing to do with article, mark as done.
+    if save_option == False and post_option == False:
+        return True
+    # Only requested saving and it saved:
+    if saved == True and post_option == False:
+        return True
+    # Only requested posting and it posted:
+    if posted == True and save_option == False:
+        return True
+    # Did both saving and posting:
+    if saved == True and posted == True:
+        return True
+
+    return False
+
 
 def capture_DOU_driver(event):
     """
@@ -124,17 +150,23 @@ def capture_DOU_driver(event):
                 if gs.debug:
                     print("Select relevant fields...")        
                 article = sa.structure_article(raw_article)
-
+                
                 # Write raw article's file to database:
+                wrote_return = 2   # (Preset status of 'save article' operation)
                 if config['save_articles']:
                     if gs.debug:
                         print("Saving article...")
                     if gs.local:
                         wa.write_local_article(config, raw_article, url_file['filename'])
+                        wrote_return = 200
                     else:
                         write_return = wa.write_to_s3(config, raw_article, url_file['filename'])
                         if write_return == 200:
-                            gcp_copy_return = wa.copy_s3_to_storage_gcp(config['bucket'], config['key'] + url_file['filename'])
+                            wrote_return = wa.copy_s3_to_storage_gcp(config['bucket'], config['key'] + url_file['filename'])
+                            if wrote_return != 200 and ds.debug:
+                                print('Copy_s3_to_storage_gcp failed.') 
+                        elif ds.debug:
+                            print('Write_to_s3 failed.')
                             
                 # Loop over filters:
                 if gs.debug:
@@ -150,9 +182,12 @@ def capture_DOU_driver(event):
                         ps.post_article(config, bot_infos[i], relevant_articles[i])
                         relevant_articles[i] = []
 
-                # Record URL in list of captured articles:
-                gu.register_captured_url(config['url_list'], url_file['url'])
-                        
+                # Record URL in list of captured articles (for now, we will assume that the article always was posted):
+                if captured_article_ok(config['save_articles'], wrote_return==200, config['post_articles'], True):
+                    gu.register_captured_url(config['url_list'], url_file['url'])
+                elif gs.debug:
+                    print('Failed to record as done: ' + url_file['url'])
+                  
             else:
                 # GET ran but returned BAD STATUS:
                 print('Bad status in GET ' + url_file['url'])  

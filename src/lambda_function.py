@@ -27,9 +27,9 @@ def lambda_handler(event, context):
     response = client.put_item(TableName="configs", Item=dyjson.dumps(updated_config, as_dict=True))
 
     # Immediately call this function again if capturing next article batch in AWS:
-    if gs.local == False and updated_config['1st_article'] != 0:
+    if gs.local == False and updated_config['next_batch'] == True:
         time.sleep(5)
-        print('Calling next batch from article #', updated_config['1st_article'])
+        print('Calling next batch')
         lambd = boto3.client('lambda')
         lambd.invoke(
              FunctionName='arn:aws:lambda:us-east-1:085250262607:function:capture_dou:PROD',
