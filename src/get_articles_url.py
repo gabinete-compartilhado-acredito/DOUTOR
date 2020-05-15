@@ -265,12 +265,12 @@ def get_articles_url(config):
     url_prefix = 'http://www.in.gov.br/web/dou/-/'
     
     # Debug message:
-    if True or gs.debug == True:
+    if True or gs.debug:
         print("Starting get_articles_url with config:")
         print(config)
     
     # Translate string representing date to datetime:
-    if gs.debug == True:
+    if gs.debug:
         print('Reading date range...')
     if config['end_date'] == 'now':
         end_date = brasilia_day()
@@ -290,7 +290,7 @@ def get_articles_url(config):
         return [], config
         
     # Translate secao config to a list of strings:
-    if gs.debug == True:
+    if gs.debug:
         print('Reading selected sections...')    
     secoes = config['secao']
     secoes = [1, 2, 3, 'e', '1a'] if secoes == 'all' else secoes
@@ -300,18 +300,18 @@ def get_articles_url(config):
     # LOOP over dates:
     url_file_list = []
     start_date = end_date + timedelta
-    if gs.debug == True:
+    if gs.debug:
         print('Will enter loop over config date and section range:')    
     for date in daterange(start_date, end_date + dt.timedelta(days=1)):
-        if gs.debug == True:
+        if gs.debug:
             print('-- '+date.strftime('%Y-%m-%d'))
         # LOOP over DOU sections:
         for s in secoes:
-            if gs.debug == True:
+            if gs.debug:
                 print('   -- s'+str(s))
             jsons = get_artigos_do(date, s)
             # LOOP over downloaded URL list:
-            if gs.debug == True:
+            if gs.debug:
                 print('      Looping over URLs...')            
             for j in jsons:
                 url      = url_prefix + j['urlTitle']

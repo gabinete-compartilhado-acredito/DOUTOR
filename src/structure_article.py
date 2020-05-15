@@ -10,44 +10,41 @@ def get_key_value(key, article_raw):
     return sel[0]['value']
 
 
-def get_excert(paragraph):
+def make_resumo(fulltext):
     """
-    Gets a string "paragraph", split it by " | " (which we used to 
-    separate multiple paragraphs), and returns the combination of parts of the first 
-    and second paragraphs. If there is just one paragraph, returns a part of it.
+    Given a string (fulltext), this function aims to extract 
+    the most important part of it as a abstract.
     """
-    paragraph_list = paragraph.split('|')
-    if len(paragraph_list) > 1:
-        return paragraph_list[0][:200] + '... | ...' + paragraph_list[1][:200] 
-    else:
-        return paragraph_list[0][:300]
-    
 
-def make_resumo(paragraph):
-    """
-    Given a string 'paragraph' with all paragraphs of the DOU's article
-    (separated by ' | '), creates a excert that acts as an abstract of 
-    the article and return it.
-    """
-    if type(paragraph) == str:
-        # Look for a marker of start of a possible resumo:
-        marker = 'resolve: | '
-        marker_start = paragraph.find(marker)
-        # If no marker, just take the first paragraphs:
-        if marker_start == -1:
-            resumo = get_excert(paragraph)
-        # If marker, get the following paragraphs:
-        else:
-            marker_end = marker_start + len(marker)
-            paragraph  = paragraph[marker_end:]
-            resumo = get_excert(paragraph)
-        # Add ... to end of resumo if not the end of a phrase:
-        if resumo[-1] != '.' and resumo[-2:] != '. ':
-            resumo = resumo + '...'
-        return resumo
-    else:
-        return None
+    # Termos a serem pesquisados:
+    termos = ['resolve:', 'onde se l', 'objeto:', 'espécie']
+    # Tamanho do resumo:
+    resumo_size = 300
     
+    # Alterando o texto para minúsculo    
+    fulltext  = str(fulltext)
+    paragraph = fulltext.lower()
+         
+    for termo in termos:
+        
+        pos = paragraph.find(termo)
+        
+        if pos != -1: 
+            # Se encontra algum dos termos, resume o texto com os 300 primeiros caracteres 
+            # a partir do termo encontrado.
+            abstract = fulltext[pos:pos + resumo_size]    
+            break            # O break aqui serve para garantir que, caso um termo seja encontrado, 
+                             # não busque pelos demais.
+        
+    if pos == -1:
+            abstract = fulltext[:resumo_size]   # Se não encontra nenhum dos termos, resume o texto 
+                                                # nos primeros 300 caracteres.          
+    
+    if len(fulltext[pos:]) > len(abstract):
+        abstract = abstract + '...'
+    
+    return abstract
+
 
 def structure_article(article_raw):
     """
@@ -84,6 +81,6 @@ def structure_article(article_raw):
                                             struct['strong'], struct['italico'], struct['paragraph']])
     struct['alltext'] = ' | '.join(fields_list)
     # Another new field (a clipping):
-    struct['resumo'] = make_resumo(struct['paragraph'])
+    struct['resumo'] = make_resumo(struct['fulltext'])
         
     return struct

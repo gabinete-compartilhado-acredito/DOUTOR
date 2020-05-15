@@ -1,9 +1,9 @@
 {
     "sched_interval": 30,
     "date_format": "%Y-%m-%d",
-    "end_date": "2020-05-04",
+    "end_date": "2020-05-06",
     "timedelta": 0,
-    "secao": [1,2,"e"],
+    "secao": [1,2, "e"],
     "storage_path": "../temp/",
     "save_articles": false,
     "filter_file": "../filters/all_DOU_filters_2020-04-27.json",
