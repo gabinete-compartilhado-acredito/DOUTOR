@@ -65,7 +65,7 @@ def fix_filename(urlTitle):
     return fixed
 
 
-def build_filename(date, secao, urlTitle, hive_partitioning=True):
+def build_filename(date, secao, urlTitle, hive_partitioning=False):
     """ 
     Create a filename for the data to be saved on AWS and GCP
     (without the folders).
