@@ -61,7 +61,39 @@ def fix_filename(urlTitle):
     that can be used as part of a filename.    
     """
     fixed = urlTitle.replace('//', '/')
+    fixed = fixed.replace('*', 'xXx')
     return fixed
+
+
+def build_filename(date, secao, urlTitle, hive_partitioning=True):
+    """ 
+    Create a filename for the data to be saved on AWS and GCP
+    (without the folders).
+    
+    Input
+    -----
+
+    date : datetime
+        The date of publication.
+
+    secao : int or str
+        The seção (or extra edition) where the publication was made. 
+        It can take the values 1, 2, 3, 'e' or '1a'.
+
+    urlTitle : str
+        The name of the file on in.gov.br website, without the folders and extension.
+
+    hive_partitioning : bool (default True)
+        Whether or not to use BigQuery's hive partitioning structure in the filename
+        (e.g. part_data_pub=2020-07-29/part_secao=2/...)
+    """
+
+    if hive_partitioning:
+        prefix = 'part_data_pub=' + date.strftime('%Y-%m-%d') + '/part_secao=' + str(secao) + '/'
+    else:
+        prefix = ''
+    
+    return prefix + date.strftime('%Y-%m-%d') + '_s' + str(secao) + '_' + fix_filename(urlTitle) + '.json'
 
 
 def brasilia_day():
@@ -315,7 +347,7 @@ def get_articles_url(config):
                 print('      Looping over URLs...')            
             for j in jsons:
                 url      = url_prefix + j['urlTitle']
-                filename = date.strftime('%Y-%m-%d') + '_s' + str(s) + '_' + fix_filename(j['urlTitle']) + '.json'
+                filename = build_filename(date, s, j['urlTitle'])
                 url_file_list.append({'url':url, 'filename':filename})
 
     # Filter out already captured articles:
