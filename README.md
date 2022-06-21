@@ -8,6 +8,9 @@ e publica aqueles selecionados em canais do [Slack](https://slack.com/intl/en-br
 o correto funcionamento do *DOUTOR*. Embora perfeitamente funcional na data de publicação, a qualidade posterior
 pode depender da manutenção do código que não estará, necessariamente, atualizada.
 
+Este projeto pode ser combinado com nosso modelo de _machine learning_ que ordena as matérias da seção 1 e 2 por
+relevância, para facilitar o monitoramento dos conteúdos mais importantes:
+<https://github.com/gabinete-compartilhado-acredito/dou-ml>
 
 ## 1. Estrutura do projeto
 
