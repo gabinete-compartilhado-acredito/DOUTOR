@@ -1,4 +1,4 @@
 datetime
 requests==2.22.0
-lxml==4.3.3
+lxml==4.9.1
 slackclient==1.3.1
