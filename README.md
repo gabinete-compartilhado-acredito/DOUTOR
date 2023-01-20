@@ -1,12 +1,18 @@
 # *DOUTOR* - DOU Tracker, Obtainer & Reporter
 
-*DOUTOR* é um código em Python 3.6 que escaneia o Diário Oficial da União (DOU), salva seus artigos numa base de dados,
-filtra os artigos de acordo com filtros definidos pelo usuário (em formato [JSON](https://pt.wikipedia.org/wiki/JSON))
-e publica aqueles selecionados em canais do [Slack](https://slack.com/intl/en-br/). É o seu monitor do DOU em código aberto!
+*DOUTOR* é um código em Python 3.6 que escaneava o Diário Oficial da União (DOU), salvava seus artigos numa base de dados,
+filtrava os artigos de acordo com filtros definidos pelo usuário (em formato [JSON](https://pt.wikipedia.org/wiki/JSON))
+e publicava aqueles selecionados em canais do [Slack](https://slack.com/intl/en-br/). Era o seu monitor do DOU em código aberto!
 
-**PS:** A [imprensa oficial](http://www.in.gov.br) pode alterar a estrutura HTML do DOU e, com isso, prevenir
+**PS:** Em janeiro de 2023, a Imprensa Nacional instalou mecanismos de bloqueio de bots na página do DOU, de maneira
+que **a captura feita por este código não funciona mais** (mas as etapas seguintes ainda podem ser aproveitadas, em princípio). Sugerimos o uso dos seguintes códigos alternativos:
+
+* <https://github.com/Imprensa-Nacional/inlabs>
+* <https://github.com/AcacioTelechi/uniao-do-diaro-oficial>
+
+**Ex-PS (até 12/2022):** A [imprensa nacional](http://www.in.gov.br) pode alterar a estrutura HTML do DOU e, com isso, prevenir
 o correto funcionamento do *DOUTOR*. Embora perfeitamente funcional na data de publicação, a qualidade posterior
-pode depender da manutenção do código que não estará, necessariamente, atualizada.
+pode depender da manutenção do código que não estará, necessariamente, atualizada. **(eu já sabia)**
 
 Este projeto pode ser combinado com nosso modelo de _machine learning_ que ordena as matérias da seção 1 e 2 por
 relevância, para facilitar o monitoramento dos conteúdos mais importantes:
